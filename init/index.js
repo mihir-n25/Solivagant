@@ -6,6 +6,7 @@ const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
 async function main(){
     await mongoose.connect(MONGO_URL);
+    
 }
 
 main().then(() =>{
@@ -16,6 +17,7 @@ main().then(() =>{
 
 const initDB = async () =>{
         await Listing.deleteMany({});
+        initData.data = initData.data.map((obj) =>({...obj,owner:"66bf8dc313069fdcb949fa06"}));
         await Listing.insertMany(initData.data);
         console.log("data inserted successfully");
     
