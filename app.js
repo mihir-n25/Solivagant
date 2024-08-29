@@ -22,6 +22,25 @@ const userRouter = require("./routes/user.js");
 
 const dbUrl = process.env.ATLASDB_URL;
 
+async function main(){
+    await mongoose.connect(dbUrl);
+}
+
+main()
+    .then(() =>{
+        console.log("connected to DB");
+    })
+    .catch((err) => {
+        console.log("cannot connect",err);
+    });
+
+    app.set("view engine", "ejs");
+    app.set("views", path.join(__dirname, "views"));
+    app.use(express.urlencoded({extended:true}));
+    app.use(methodOverride("_method"));
+    app.engine("ejs",ejsMate);
+    app.use(express.static(path.join(__dirname,"/public")));
+    
 mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log('Connected to MongoDB');
@@ -29,6 +48,8 @@ mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
     .catch(err => {
         console.error('Cannot connect to MongoDB:', err);
     });
+    
+
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     crypto: {
@@ -70,28 +91,9 @@ app.use((req,res,next) =>{
     next();
 });
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-app.use(express.urlencoded({extended:true}));
-app.use(methodOverride("_method"));
-app.engine("ejs",ejsMate);
-app.use(express.static(path.join(__dirname,"/public")));
-
 app.use("/listings",listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
 app.use("/",userRouter);
-
-app.listen(8080,() => {
-    console.log("server is listening to port 8080");
-});
-
-main()
-    .then(() =>{
-        console.log("connected to DB");
-    })
-    .catch((err) => {
-        console.log("cannot connect",err);
-    });
 
 app.get("/",(req,res)=>{
     res.send("hi,I am root");
@@ -105,4 +107,8 @@ app.use((err,req,res,next) =>{
     let{statusCode =500 , message ="something went wrong"}=err;
     res.status(statusCode).render("error.ejs",{ message});
     // res.status(statusCode).send(message);
+});
+
+app.listen(8080,() => {
+    console.log("server is listening to port 8080");
 });
