@@ -22,16 +22,6 @@ const userRouter = require("./routes/user.js");
 
 const dbUrl = process.env.ATLASDB_URL;
 
-mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => {
-        console.log('Connected to MongoDB');
-    })
-    .catch(err => {
-        console.error('Cannot connect to MongoDB:', err);
-    });
-    async function main(){
-        await mongoose.connect(dbUrl);
-    }
 
 const store = MongoStore.create({
     mongoUrl: dbUrl,
