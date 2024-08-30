@@ -96,7 +96,7 @@ app.use("/listings/:id/reviews",reviewRouter);
 app.use("/",userRouter);
 
 app.get("/",(req,res)=>{
-    res.send("hi,I am root");
+    res.send("index");
 });
 
 app.all("*",(req,res,next)=>{
